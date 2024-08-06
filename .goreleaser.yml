@@ -1,149 +1,76 @@
-env:
-  - GO111MODULE=on
-  - CGO_ENABLED=0
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
 
+project_name: {{ .appName }}
 before:
   hooks:
-    - ./scripts/manpages.sh
-    - ./scripts/completions.sh
-
+  - go mod tidy
 builds:
-  -
-    binary: golang-cli-template
-    ldflags: -s -w -X main.version={{ .Version }}
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-
-archives:
-  -
-    builds:
-      - golang-cli-template
-    format_overrides:
-      - goos: windows
-        format: zip
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      amd64: x86_64
-
+- env:
+  - CGO_ENABLED=0
+  goos:
+  - linux
+  - windows
+  - darwin
+  goarch:
+  - amd64
+  - arm
+  - arm64
+  ldflags:
+  - -s -w -X cmd.version={{`{{.Version}}`}}
+release:
+  prerelease: auto
 nfpms:
-  - builds:
-      - golang-cli-template
-    vendor: FalcoSuessgott
-    homepage:  https://github.com/FalcoSuessgott/golang-cli-template
-    maintainer: "Tom Morelly <tommorelly@gmail.com>"
-    description: "A general purpose golang CLI template for Github and Gitlab"
-    license: GPL-3.0
-    formats:
-      - apk
-      - deb
-      - rpm
-    bindir: /usr/bin
-    contents:
-      - src: ./manpages/golang-cli-template.1.gz
-        dst: /usr/share/man/man1/golang-cli-template.1.gz
-        file_info:
-          mode: 0644
-      - src: ./completions/golang-cli-template.bash
-        dst: /usr/share/bash-completion/completions/golang-cli-template
-        file_info:
-          mode: 0644
-      - src: ./completions/golang-cli-template.fish
-        dst: /usr/share/fish/vendor_completions.d/golang-cli-template.fish
-        file_info:
-          mode: 0644
-      - src: ./completions/golang-cli-template.zsh
-        dst:  /usr/share/zsh/vendor-completions/_golang-cli-template
-        file_info:
-          mode: 0644
-
-dockers:
-- image_templates:
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  dockerfile: Dockerfile
-  use: buildx
-  build_flag_templates:
-  - "--pull"
-  - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/FalcoSuessgott/golang-cli-template/master/README.md"
-  - "--label=io.artifacthub.package.maintainers=[{\"name\":\"Tom Morelly\",\"email\":\"tommorelly@gmail.com\"}]"
-  - "--label=io.artifacthub.package.license=MIT"
-  - "--label=org.opencontainers.image.description=A general purpose golang CLI template for Github and Gitlab"
-  - "--label=org.opencontainers.image.created={{.Date}}"
-  - "--label=org.opencontainers.image.name={{.ProjectName}}"
-  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-  - "--label=org.opencontainers.image.version={{.Version}}"
-  - "--label=org.opencontainers.image.source={{.GitURL}}"
-  - "--platform=linux/amd64"
-- image_templates:
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-  dockerfile:  Dockerfile
-  use: buildx
-  build_flag_templates:
-  - "--pull"
-  - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/FalcoSuessgott/golang-cli-template/master/README.md"
-  - "--label=io.artifacthub.package.logo-url=https://raw.githubusercontent.com/FalcoSuessgott/golang-cli-template/master/www/static/images/logo.png"
-  - "--label=io.artifacthub.package.maintainers=[{\"name\":\"Tom Morelly\",\"email\":\"tommorelly@gmail.com\"}]"
-  - "--label=io.artifacthub.package.license=MIT"
-  - "--label=org.opencontainers.image.description=A general purpose golang CLI template for Github and Gitlab"
-  - "--label=org.opencontainers.image.created={{.Date}}"
-  - "--label=org.opencontainers.image.name={{.ProjectName}}"
-  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-  - "--label=org.opencontainers.image.version={{.Version}}"
-  - "--label=org.opencontainers.image.source={{.GitURL}}"
-  - "--platform=linux/arm64"
-  goarch: arm64
-
-docker_manifests:
-- name_template: 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}'
-  image_templates:
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-- name_template: 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}'
-  image_templates:
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-- name_template: 'falcosuessgott/{{.ProjectName}}:latest'
-  image_templates:
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  - 'falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-- name_template: 'ghcr.io/falcosuessgott/{{.ProjectName}}:latest'
-  image_templates:
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-amd64'
-  - 'ghcr.io/falcosuessgott/{{.ProjectName}}:{{ .Tag }}-arm64'
-
+- file_name_template: '{{`{{ .ProjectName }}`}}_{{`{{ .Arch }}`}}'
+  maintainer: {{ .maintainerName }} <{{ .maintainerEmail }}>
+  homepage: {{ .maintainerUrl }}
+  description: >-
+    {{ .appDescription }}
+  license: MIT
+  formats:
+  - deb
+  - rpm
+  - apk
+  bindir: /usr/bin
+  section: utils
+  contents:
+  - src: ./LICENSE
+    dst: /usr/share/doc/nfpm/copyright
+    file_info:
+      mode: 0644
+sboms:
+- artifacts: archive
+{{ $githubUserOrg := trimPrefix "https://github.com/" .githubRepo | splitList "/" | first }}
+brews:
+- repository:
+    owner: {{ $githubUserOrg }}
+    name: homebrew-{{ .appName }}
+    branch: main
+    token: "{{`{{ .Env.SKA_HOMEBREW_TOKEN }}`}}"
+  # yamllint disable-line rule:comments rule:line-length
+  url_template: https://github.com/<user>/<repo>/releases/download/{{`{{ .Tag }}`}}/{{`{{ .ArtifactName }}`}}
+  commit_author:
+    name: {{ .maintainerName }}
+    email: {{ .maintainerEmail }}
+  directory: Formula
+  homepage: {{ .githubRepo}}
+  description: >-
+    {{ .appDescription }}
+  license: MIT
+archives:
+- wrap_in_directory: true
+  format_overrides:
+  - goos: windows
+    format: zip
 checksum:
-  name_template: "checksums.txt"
-
+  name_template: checksums.txt
+snapshot:
+  name_template: '{{`{{ .Tag }}`}}-next'
 changelog:
+  disable: true
   sort: asc
-  use: github
   filters:
     exclude:
+    - '^docs:'
     - '^test:'
-    - '^chore'
-    - 'merge conflict'
-    - Merge pull request
-    - Merge remote-tracking branch
-    - Merge branch
-    - go mod tidy
-  groups:
-    - title: Dependency updates
-      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
-      order: 300
-    - title: 'New Features'
-      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
-      order: 100
-    - title: 'Bug fixes'
-      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
-      order: 200
-    - title: 'Documentation updates'
-      regexp: ^.*?doc(\([[:word:]]+\))??!?:.+$
-      order: 400
-    - title: Other work
-      order: 9999
+    - '^*.md:'

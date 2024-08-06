@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FalcoSuessgott/golang-cli-template/cmd"
+	"{{ .githubRepo | trimPrefix "https://" }}/cmd"
 )
 
 var version = ""

@@ -1,7 +1,8 @@
-golang-cli-template
+{{ .appName }}
 vendor/
 coverage.out
 /dist
 .envrc
 manpages/
 dist/
+.idea/

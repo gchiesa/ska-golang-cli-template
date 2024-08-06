@@ -1,6 +1,8 @@
-module github.com/FalcoSuessgott/golang-cli-template
+module {{ trimPrefix "https://" .githubRepo }}
 
-go 1.19
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/daixiang0/gci v0.13.4

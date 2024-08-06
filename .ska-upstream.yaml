@@ -1,0 +1,30 @@
+ignorePaths:
+- .git
+- .idea
+
+inputs:
+- placeholder: githubRepo
+  label: Github Repository
+  help: The url of the github repository e.g. https://github.com/org/repo
+  regexp: "^[a-z0-9-/:.]*$"
+
+- placeholder: appName
+  label: Application Name
+  regexp: "^[a-zA-Z0-9_-]*$"
+  help: The name of the application
+
+- placeholder: appDescription
+  label: Application Description
+  help: A short description of the application
+
+- placeholder: maintainerName
+  label: Maintainer
+  help: The initial maintainer of the application (name)
+
+- placeholder: maintainerEmail
+  label: Maintainer Email
+  help: The initial maintainer of the application (email)
+
+- placeholder: maintainerUrl
+  label: Maintainer URL
+  help: The initial maintainer of the application (homepage)

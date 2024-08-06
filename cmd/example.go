@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/FalcoSuessgott/golang-cli-template/internal/convert"
-	"github.com/FalcoSuessgott/golang-cli-template/pkg/example"
 	"github.com/spf13/cobra"
+	"{{ .githubRepo | trimPrefix "https://" }}/internal/convert"
+	"{{ .githubRepo | trimPrefix "https://" }}/pkg/example"
 )
 
 const (
