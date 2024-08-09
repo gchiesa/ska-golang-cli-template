@@ -1,3 +1,4 @@
+# ska-start:centrally-managed
 coverage:
   status:
     project:
@@ -8,6 +9,6 @@ coverage:
       default:
         target: 50%
         threshold: 5%
-
+# ska-end
 ignore:
   - "cmd/man.go"

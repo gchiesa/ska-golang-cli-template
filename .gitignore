@@ -1,4 +1,5 @@
 {{ .appName }}
+# ska-start:gitignore-centally-managed
 vendor/
 coverage.out
 /dist
@@ -6,3 +7,4 @@ coverage.out
 manpages/
 dist/
 .idea/
+# ska-end

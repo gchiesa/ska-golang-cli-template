@@ -1,5 +1,6 @@
 version: 2
 updates:
+# ska-start:centrally-managed
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
@@ -30,3 +31,4 @@ updates:
     commit-message:
       prefix: "feat"
       include: "scope"
+# ska-end
