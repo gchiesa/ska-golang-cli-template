@@ -4,13 +4,11 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"{{ .githubRepo | trimPrefix "https://" }}/internal/convert"
-	"{{ .githubRepo | trimPrefix "https://" }}/pkg/example"
+	"{{ regexReplaceAll "^https?://" .githubRepo "" }}/internal/convert"
+	"{{ regexReplaceAll "^https?://" .githubRepo "" }}/pkg/example"
 )
 
-const (
-	numberOfArgs = 2
-)
+const numberOfArgs = 2
 
 type exampleOptions struct {
 	multiply bool
@@ -45,18 +43,18 @@ func (o *exampleOptions) run(cmd *cobra.Command, args []string) error {
 	}
 
 	if o.multiply {
-		fmt.Fprintf(cmd.OutOrStdout(), "%d\n", example.Multiply(values[0], values[1]))
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%d\n", example.Multiply(values[0], values[1]))
 	}
 
 	if o.add {
-		fmt.Fprintf(cmd.OutOrStdout(), "%d\n", example.Add(values[0], values[1]))
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%d\n", example.Add(values[0], values[1]))
 	}
 
 	return nil
 }
 
 func (o *exampleOptions) parseArgs(args []string) ([]int, error) {
-	values := make([]int, 2) //nolint: gomnd
+	values := make([]int, numberOfArgs)
 
 	for i, a := range args {
 		v, err := convert.ToInteger(a)

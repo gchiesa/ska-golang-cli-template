@@ -12,8 +12,8 @@ func newVersionCmd(version string) *cobra.Command {
 		Short:        "{{ .appName }} version",
 		Args:         cobra.NoArgs,
 		SilenceUsage: true,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Fprintf(cmd.OutOrStdout(), "{{ .appName }}: %s\n", version)
+		Run: func(cmd *cobra.Command, _ []string) {
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "{{ .appName }}: %s\n", version)
 		},
 	}
 }

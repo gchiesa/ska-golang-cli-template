@@ -40,7 +40,7 @@ nfpms:
       mode: 0644
 sboms:
 - artifacts: archive
-{{ $githubUserOrg := trimPrefix "https://github.com/" .githubRepo | splitList "/" | first }}
+{{ $githubUserOrg := regexReplaceAll "^https?://github.com/" .githubRepo "" | splitList "/" | first }}
 brews:
 - repository:
     owner: {{ $githubUserOrg }}

@@ -1,8 +1,6 @@
-module {{ trimPrefix "https://" .githubRepo }}
+module {{ regexReplaceAll "^https?://" .githubRepo "" }}
 
-go 1.21
-
-toolchain go1.22.0
+go 1.24
 
 require (
 	github.com/daixiang0/gci v0.13.4

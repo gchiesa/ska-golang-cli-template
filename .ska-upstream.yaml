@@ -6,25 +6,50 @@ inputs:
 - placeholder: githubRepo
   label: Github Repository
   help: The url of the github repository e.g. https://github.com/org/repo
-  regexp: "^[a-z0-9-/:.]*$"
+  regexp: "^(https://)?[a-z0-9][a-z0-9-/:.]*$"
+  minLength: 1
+  writeOnce: true
 
 - placeholder: appName
   label: Application Name
   regexp: "^[a-zA-Z0-9_-]*$"
-  help: The name of the application
+  help: The name of the application (letters, numbers, hyphens, underscores only)
+  minLength: 1
+  writeOnce: true
+
+- placeholder: stage
+  label: Stage
+  type: list
+  items: [dev, test, acceptance, production, sandbox, staging]
+  writeOnce: true
+  help: The stage of the environment type
 
 - placeholder: appDescription
   label: Application Description
   help: A short description of the application
+  minLength: 1
 
 - placeholder: maintainerName
   label: Maintainer
   help: The initial maintainer of the application (name)
+  regexp: "^[a-zA-Z0-9 _'-]*$"
+  minLength: 1
 
 - placeholder: maintainerEmail
   label: Maintainer Email
-  help: The initial maintainer of the application (email)
+  help: The initial maintainer of the application (e.g. user@example.com)
+  regexp: "^[a-zA-Z0-9._%+@-]*$"
+  minLength: 1
 
 - placeholder: maintainerUrl
   label: Maintainer URL
-  help: The initial maintainer of the application (homepage)
+  help: The initial maintainer of the application (homepage, e.g. https://example.com)
+  regexp: "^[a-z0-9-/:.]*$"
+  minLength: 1
+
+- placeholder: buildFramework
+  label: Build Framework
+  type: list
+  items: [Makefile, MISE]
+  writeOnce: true
+  help: Choose Makefile for classic make targets, or MISE for mise-based task runner (https://mise.jdx.dev)

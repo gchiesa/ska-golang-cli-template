@@ -1,3 +1,4 @@
+// Package example provides simple arithmetic helpers used by the example command.
 package example
 
 // Add returns the summary of two integers.
