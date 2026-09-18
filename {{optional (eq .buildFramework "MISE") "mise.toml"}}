@@ -1,0 +1,61 @@
+[tools]
+go = "1.24"
+"go:gotest.tools/gotestsum" = "latest"
+"go:mvdan.cc/gofumpt" = "latest"
+"go:github.com/daixiang0/gci" = "latest"
+golangci-lint = "latest"
+
+[env]
+PROJECT_NAME = "{{ .appName }}"
+GOPROXY = "https://proxy.golang.org,direct"
+GONOSUMDB = "*"
+
+[tasks.build]
+description = "Build the Go binary"
+run = 'go build -ldflags "-X main.version=$(git describe --abbrev=0 --tags 2>/dev/null || echo "dev")" -o $PROJECT_NAME'
+
+[tasks.install]
+description = "Install the Go binary"
+run = 'go install -ldflags "-X main.version=$(git describe --abbrev=0 --tags 2>/dev/null || echo "dev")"'
+
+[tasks.run]
+description = "Run the application"
+run = 'go run -ldflags "-X main.version=$(git describe --abbrev=0 --tags 2>/dev/null || echo "dev")" main.go'
+
+[tasks.bootstrap]
+description = "Install build dependencies"
+run = "go generate -tags tools tools/tools.go"
+
+[tasks.test]
+description = "Run tests with coverage"
+depends = ["clean"]
+run = [
+    "go test --cover -parallel=1 -v -coverprofile=coverage.out ./...",
+    "go tool cover -func=coverage.out | sort -rnk3",
+]
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = "rm -rf coverage.out dist/ $PROJECT_NAME"
+
+[tasks.cover]
+description = "Display test coverage"
+run = [
+    "go test -v -race $(go list ./... | grep -v /vendor/) -v -coverprofile=coverage.out",
+    "go tool cover -func=coverage.out",
+]
+
+[tasks.fmt]
+description = "Format Go files with gofumpt and gci"
+run = [
+    "gofumpt -w .",
+    "gci write .",
+]
+
+[tasks.lint]
+description = "Lint Go files"
+run = "golangci-lint run -c .golang-ci.yml"
+
+[tasks.pre-commit]
+description = "Run pre-commit hooks"
+run = "pre-commit run --all-files"

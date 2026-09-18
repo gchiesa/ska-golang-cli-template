@@ -1,3 +1,4 @@
+// Package cmd provides the CLI commands for {{ .appName }}.
 package cmd
 
 import (
@@ -10,7 +11,7 @@ func newRootCmd(version string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "{{ .appName }}",
 		Short: "{{ .appDescription }}",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return cmd.Help()
 		},
 	}
@@ -23,7 +24,8 @@ func newRootCmd(version string) *cobra.Command {
 
 // Execute invokes the command.
 func Execute(version string) error {
-	if err := newRootCmd(version).Execute(); err != nil {
+	err := newRootCmd(version).Execute()
+	if err != nil {
 		return fmt.Errorf("error executing root command: %w", err)
 	}
 

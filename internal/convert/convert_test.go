@@ -9,7 +9,7 @@ import (
 func TestToInteger(t *testing.T) {
 	testCases := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected int
 		err      bool
 	}{
@@ -21,7 +21,7 @@ func TestToInteger(t *testing.T) {
 		},
 		{
 			name:  "invalid string",
-			input: "1",
+			input: "abc",
 			err:   true,
 		},
 		{
@@ -35,7 +35,7 @@ func TestToInteger(t *testing.T) {
 		res, err := ToInteger(tc.input)
 
 		if tc.err {
-			assert.Error(t, errConversionError(tc.input), err)
+			assert.ErrorIs(t, err, ErrConversion)
 		} else {
 			assert.Equal(t, tc.expected, res)
 		}

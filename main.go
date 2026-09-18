@@ -1,16 +1,18 @@
+// Package main is the entry point for the {{ .appName }} CLI.
 package main
 
 import (
 	"fmt"
 	"os"
 
-	"{{ .githubRepo | trimPrefix "https://" }}/cmd"
+	"{{ regexReplaceAll "^https?://" .githubRepo "" }}/cmd"
 )
 
 var version = ""
 
 func main() {
-	if err := cmd.Execute(version); err != nil {
+	err := cmd.Execute(version)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		os.Exit(1)
 	}

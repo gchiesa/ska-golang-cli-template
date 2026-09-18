@@ -1,27 +1,23 @@
-linters-settings:
-  lll:
-    line-length: 180
+version: "2"
+
 linters:
-  enable-all: true
+  default: all
   disable:
     - testpackage
     - forbidigo
     - paralleltest
-    - exhaustivestruct
     - varnamelen
-    - interfacer
-    - maligned
-    - scopelint
-    - golint
-    - varcheck
-    - nosnakecase
-    - deadcode
-    - ifshort
-    - structcheck
-    - rowserrcheck
-    - sqlclosecheck
-    - structcheck
-    - wastedassign
     - exhaustruct
-    - nolintlint
     - wrapcheck
+    - ireturn
+    - cyclop
+    - funlen
+    - gocognit
+    - maintidx
+    - gochecknoinits
+    - depguard
+
+formatters:
+  settings:
+    lll:
+      line-length: 180

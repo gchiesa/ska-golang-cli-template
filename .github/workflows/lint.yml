@@ -14,14 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+{{- if eq .buildFramework "MISE"}}
+      - name: Install mise and tools
+        uses: jdx/mise-action@v2
+
+      - name: Lint
+        run: mise run lint
+{{- else}}
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.19'
+          go-version: '1.21'
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.50.0
-          args: -c .golang-ci.yml -v --timeout=5m
-        env:
-          GO111MODULES: off
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.0
+
+      - name: Lint
+        run: make lint
+{{- end}}
